@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AL Safa Fruits & Vegetables</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f5fff5;
+}
+
+header{
+background:green;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.shop-image img{
+width:100%;
+height:300px;
+object-fit:cover;
+}
+
+.container{
+padding:20px;
+text-align:center;
+}
+
+table{
+margin:auto;
+border-collapse:collapse;
+}
+
+table, th, td{
+border:1px solid #ddd;
+padding:10px;
+}
+
+input, textarea{
+padding:8px;
+margin:5px;
+width:250px;
+}
+
+button{
+background:green;
+color:white;
+padding:10px 20px;
+border:none;
+cursor:pointer;
+margin:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h1>AL Safa Fruits & Vegetables</h1>
+</header>
+
+<div class="shop-image">
+<img src="images/shop.jpg">
+</div>
+
+<div class="container">
+
+<h2>Place Your Order</h2>
+
+<input type="text" id="name" placeholder="Your Name"><br>
+<input type="text" id="phone" placeholder="Phone Number"><br>
+
+<textarea id="address" placeholder="Delivery Address"></textarea><br>
+
+<h3>Payment Method</h3>
+
+<input type="radio" name="payment" value="Cash on Delivery" checked> Cash on Delivery
+<input type="radio" name="payment" value="Online Payment"> Online Payment
+
+<br><br>
+
+<table>
+
+<tr>
+<th>Product</th>
+<th>Quantity (KG)</th>
+</tr>
+
+<tr>
+<td>Tomato</td>
+<td><input type="number" step="0.1" id="tomato" placeholder="KG"></td>
+</tr>
+
+<tr>
+<td>Potato</td>
+<td><input type="number" step="0.1" id="potato" placeholder="KG"></td>
+</tr>
+
+<tr>
+<td>Onion</td>
+<td><input type="number" step="0.1" id="onion" placeholder="KG"></td>
+</tr>
+
+<tr>
+<td>Carrot</td>
+<td><input type="number" step="0.1" id="carrot" placeholder="KG"></td>
+</tr>
+
+<tr>
+<td>Blood Orange</td>
+<td><input type="number" step="0.1" id="bloodorange" placeholder="KG"></td>
+</tr>
+
+<tr>
+<td>Pineapple</td>
+<td><input type="number" step="0.1" id="pineapple" placeholder="KG"></td>
+</tr>
+
+<tr>
+<td>Strawberry</td>
+<td><input type="number" step="0.1" id="strawberry" placeholder="KG"></td>
+</tr>
+
+<tr>
+<td>Kiwi</td>
+<td><input type="number" step="0.1" id="kiwi" placeholder="KG"></td>
+</tr>
+
+<tr>
+<td>Citrus Japonica</td>
+<td><input type="number" step="0.1" id="citrus" placeholder="KG"></td>
+</tr>
+
+</table>
+
+<button onclick="sendToWhatsApp()">Place Order</button>
+
+<button onclick="showOrders()">View Order History</button>
+
+</div>
+
+<script>
+
+function sendToWhatsApp(){
+
+var name = document.getElementById("name").value;
+var phone = document.getElementById("phone").value;
+var address = document.getElementById("address").value;
+
+var payment = document.querySelector('input[name="payment"]:checked').value;
+
+var confirmOrder = confirm(
+"Confirm Order\n\n" +
+"Name: " + name
+);
+
+if(!confirmOrder){
+return;
+}
+
+var order = {
+name:name,
+date:new Date().toLocaleString()
+};
+
+var orders = JSON.parse(localStorage.getItem("orders")) || [];
+orders.push(order);
+localStorage.setItem("orders", JSON.stringify(orders));
+
+alert("🎉 Order placed successfully!");
+
+var message = "AL Safa Fruits & Vegetables%0A";
+message += "Name: " + name + "%0A";
+message += "Phone: " + phone + "%0A";
+message += "Address: " + address + "%0A";
+message += "Payment: " + payment + "%0A%0A";
+
+message += "Order Details:%0A";
+
+var products = [
+["Tomato","tomato"],
+["Potato","potato"],
+["Onion","onion"],
+["Carrot","carrot"],
+["Blood Orange","bloodorange"],
+["Pineapple","pineapple"],
+["Strawberry","strawberry"],
+["Kiwi","kiwi"],
+["Citrus Japonica","citrus"]
+];
+
+products.forEach(function(item){
+
+var qty = document.getElementById(item[1]).value;
+
+if(qty>0){
+message += item[0] + " - " + qty + " KG%0A";
+}
+
+});
+
+var url = "https://wa.me/55700067?text=" + message;
+
+window.open(url, "_blank");
+
+}
+
+function showOrders(){
+
+var orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+var message = "Order History\n\n";
+
+orders.forEach(function(order){
+
+message += "Name: " + order.name + "\n";
+message += "Date: " + order.date + "\n\n";
+
+});
+
+alert(message);
+
+}
+
+</script>
+
+</body>
+</html>
